@@ -43,17 +43,21 @@ void loadDoctors(){
 	fclose(fp);
 }
 void loadVisits(){
+	printf("start loadVisit\n");
 	char buffer[1000];
 	int i,j,k;
 	for(i =0;i<doctorCount;i++){
 		k=0;
 		for(j=0;j<patientCount;j++){
 			if(!strcmp(patient[j].doctorLastName,doctor[i].lastName)){
+				printf("przypis\n");
 				doctor[i].visits[k] = patient[j].visitDate;
 				k++;
+				printf("przypis\n");
 			}
 		}
 	}
+	printf("koniec loadVisit\n");
 }
 
 void saveDoctors(){

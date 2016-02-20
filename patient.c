@@ -5,6 +5,7 @@ char* patientDB = "patientDB";
 struct Patient patient[100];
 int patientCount;
 void savePatient() {
+		printf("a1\n");
 	int patientCount = getPatientCount();
 	int i;
 	FILE *fp = fopen(patientDB, "w");
@@ -13,6 +14,7 @@ void savePatient() {
 	sprintf(intStr,"%d", patientCount);
 	fputs(intStr,fp);
 	fputs("\n",fp);
+		printf("a2\n");
 	for(i=0;i<patientCount;i++){
 		fputs(patient[i].name,fp);
 		fputs(patient[i].lastName,fp);
@@ -34,7 +36,9 @@ void savePatient() {
 		fputs("\n",fp);
 		sprintf(intStr,"%d", patient[i].confirmation);
 		fputs(intStr,fp);
+			printf("a3\n");
 		fputs("\n",fp);
+			printf("a4\n");
 	}
 	fclose(fp);
 }
@@ -85,11 +89,11 @@ void loadPatient() {
 //imie; nazwisko; pesel; login; haslo; imieLekarza; nazwiskoLekarza; dataRejestracji; data_wizyty; probyLogowania; potwierdzenie
 void addPatientX(){
 	
-			char buffer[255];
-						printf("kurwa\n");
-
-			FILE *fp = fopen(patientDB, "w+");
-			printf("kurwa\n");
+			char buffer[1000];
+		
+			
+			
+			FILE *fp = fopen(patientDB, "a");
 				if(fp == NULL){ // jesli nie ma pliku tworzy go i wpisuje ilosc pacjentow=0
 					printf("BLAD PRZY OTWIRANIU PATIENDB\n");
 				}
@@ -103,22 +107,18 @@ void addPatientX(){
 			struct tm* tm_info;
 			time_t timer;
 			time(&timer);
-			char* timebuff;
+			char timebuff[100];
 			tm_info = localtime(&timer);
 			strftime(timebuff, 100, "%c", tm_info);
 			strcat(buffer,timebuff);
+			
 			strcat(buffer,"\n");
 			strcat(buffer, "0\n0\n0\n"); // puste: dataWizyty, probyLogowania, pitwierdzenie
-			printf("wpis\n");
-						printf("%s\n", buffer);
-
 			fputs(buffer,fp);
-			printf("wpis\n");
 			fclose(fp);
 
-			//incrementPatientCount();
-			printPatients();
-			//loadPatient();
+			incrementPatientCount();
+			loadPatient();
 			printPatients();
 		
 }
@@ -126,10 +126,7 @@ void addPatientX(){
 
 
 void incrementPatientCount() {
-	printf("inc1\n");
 	int patientCount = getPatientCount();
-	printf("inc2\n");
-
 	patientCount++;
 	FILE *fp = fopen(patientDB,"r+");
 	fseek(fp,0,SEEK_SET);

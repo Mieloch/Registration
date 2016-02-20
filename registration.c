@@ -27,13 +27,13 @@ int main(int argc, char** argv){
 	
 	patientCount = getPatientCount();
 	loadPatient(); 
-	//loadDoctors();
-	//doctorCount = getDoctorCount();
-	//printDoctors();
+	loadDoctors();
+	doctorCount = getDoctorCount();
+	printDoctors();
 	printPatients();
-	printf("begin\n");
+	
 	while(1){
-		
+		printf("begin\n");
 		if(msgrcv(msgid,&addPatientMessage,sizeof(addPatientMessage),1,IPC_NOWAIT) != -1){
 			addPatientX();
 		}
@@ -43,15 +43,21 @@ int main(int argc, char** argv){
 		else if(msgrcv(msgid,&informationMessage,sizeof(informationMessage),3,IPC_NOWAIT) != -1){
 			sendDoctorsInDate();
 		}
-		else if(msgrcv(msgid,&informationMessage,sizeof(informationMessage),4,IPC_NOWAIT) != -1){
-			addVisit();
-		}
+	
+	
 		else if(msgrcv(msgid,&informationMessage,sizeof(informationMessage),5,IPC_NOWAIT) != -1){
 			cancelVisit();
 		}
+			
+
 		else if(msgrcv(msgid,&informationMessage,sizeof(informationMessage),6,IPC_NOWAIT) != -1){
 			sendVisitInfo();
 		}
+	/*		else if(msgrcv(msgid,&informationMessage,sizeof(informationMessage),4,IPC_NOWAIT) != -1){
+			addVisit();
+		}
+	*/			printf("3\n");
+
 
 
 		//printPatients();
@@ -106,6 +112,7 @@ int checkFreeTerm(char* doctorLastName, int day, int month, int year, int term){
 
 }
 void cancelVisit(){
+	printf("start cancelVisit\n");
 		char buffer[100];
 		int i,k;
 		int day = informationMessage.day;
@@ -113,14 +120,14 @@ void cancelVisit(){
 		int year = informationMessage.year -1900;
 		int term = informationMessage.term;
 		int patientCount = getPatientCount();
-		strcpy(informationMessage.information, "Cos poszlo nie tak");
+		strcpy(informationMessage.information, "Cos poszlo nie tak\n");
 		for(i=0;i<patientCount;i++){
 			if(strcmp(patient[i].login, informationMessage.login)==0){
-				strcpy(patient[i].doctorLastName, "");
-				strcpy(patient[i].doctorName, "");
+				strcpy(patient[i].doctorLastName, "\n");
+				strcpy(patient[i].doctorName, "\n");
 
 				patient[i].visitDate.tm_year = 0;
-				strcpy(informationMessage.information, "Odwolano");
+				strcpy(informationMessage.information, "Odwolano\n");
 				break;
 			}
 		}
@@ -128,10 +135,11 @@ void cancelVisit(){
 		loadVisits();
 		informationMessage.mtype = informationMessage.type;
 		msgsnd(msgid,&informationMessage,sizeof(informationMessage),0);
-		
+			printf("koniec cancelVisit\n");
+
 }
 void addVisit(){
-			printf("add0\n");
+		printf("start addVisit\n");
 
 		loadVisits(); // aktualizacja wizyt
 		char buffer[100];
@@ -140,10 +148,8 @@ void addVisit(){
 		int month = informationMessage.month -1;
 		int year = informationMessage.year -1900;
 		int term = informationMessage.term;
-		printf("add1\n");
 		//sprawdzanie terminu
 		if(checkFreeTerm(informationMessage.doctorLastName,day,month,year,term) == 1){
-					printf("add2\n");
 
 			//dopisywanei wizyty pacjentowi
 			for(i=0;i<doctorCount;i++){
@@ -174,10 +180,11 @@ void addVisit(){
 		
 		informationMessage.mtype = informationMessage.type;
 		msgsnd(msgid,&informationMessage,sizeof(informationMessage),0);
-		
+		printf("koniec addVisit\n");
 }
 
 void sendDoctorsInDate(){
+	printf("start doctorsInDay\n");
 		int dayOfWeek = getDayOfWeek(informationMessage.day,informationMessage.month,informationMessage.year);
 		int isTaken = 0;
 		char buffer[100];
@@ -196,7 +203,7 @@ void sendDoctorsInDate(){
 						strftime(buffer,100,"%w",&doctor[i].visitDay);
 						int doctorVisitDay = atoi(buffer);
 						for(k=0;k<20;k++){	
-							if(doctor[i].visits[k].tm_hour == visitTerms[j] && doctorVisitDay == dayOfWeek){
+							if(doctor[i].visits[k].tm_hour == visitTerms[j] && doctorVisitDay != dayOfWeek){
 								isTaken =1;
 								break;
 							}
@@ -213,6 +220,8 @@ void sendDoctorsInDate(){
 		}
 		informationMessage.mtype = informationMessage.type;
 		msgsnd(msgid,&informationMessage,sizeof(informationMessage),0);
+			printf("ends doctorsInDay\n");
+
 }
 void loginUser(){
 	printf("login\n");

@@ -106,11 +106,13 @@ void getVisitInfo(){
 	}
 }
 void cancelVisit(){
+	InformationMessage informationMessage;
 	strcpy(informationMessage.login, logedLogin);
 	informationMessage.type = pid;
 	informationMessage.mtype = 5;
 	msgsnd(msgId, &informationMessage, sizeof(informationMessage),0);
 	msgrcv(msgId, &informationMessage, sizeof(informationMessage),pid,0);
+	printf("%s\n",informationMessage.information);
 }
 void setVisit(){
 	if(isLoged == 0){
@@ -178,6 +180,7 @@ void getDoctorInDate(){
 	informationMessage.mtype = 3;
 	printf("send\n");
 	msgsnd(msgId, &informationMessage, sizeof(informationMessage),0);
+		printf("send2\n");
 	msgrcv(msgId, &informationMessage, sizeof(informationMessage),pid,0);
 	printf("\nLekarze przyjmujacy tego dnia:\n %s\n", informationMessage.information);
 
