@@ -27,8 +27,8 @@ int main(int argc, char** argv){
 	
 	patientCount = getPatientCount();
 	loadPatient(); 
-	loadDoctors();
-	doctorCount = getDoctorCount();
+	//loadDoctors();
+	//doctorCount = getDoctorCount();
 	//printDoctors();
 	printPatients();
 	printf("begin\n");
@@ -36,7 +36,6 @@ int main(int argc, char** argv){
 		
 		if(msgrcv(msgid,&addPatientMessage,sizeof(addPatientMessage),1,IPC_NOWAIT) != -1){
 			addPatientX();
-
 		}
 		else if(msgrcv(msgid,&loginMessage,sizeof(loginMessage),2,IPC_NOWAIT) != -1){
 			loginUser();

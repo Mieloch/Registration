@@ -1,7 +1,7 @@
 #include "headers.h"
 #include "patient.h"
 
-char* patientDB = "patientDB2";
+char* patientDB = "patientDB";
 struct Patient patient[100];
 int patientCount;
 void savePatient() {
@@ -84,11 +84,11 @@ void loadPatient() {
 }
 //imie; nazwisko; pesel; login; haslo; imieLekarza; nazwiskoLekarza; dataRejestracji; data_wizyty; probyLogowania; potwierdzenie
 void addPatientX(){
-		if(fork()==0){
-			char buffer[1000];
+	
+			char buffer[255];
 						printf("kurwa\n");
 
-			FILE *fp = fopen(patientDB, "a");
+			FILE *fp = fopen(patientDB, "w+");
 			printf("kurwa\n");
 				if(fp == NULL){ // jesli nie ma pliku tworzy go i wpisuje ilosc pacjentow=0
 					printf("BLAD PRZY OTWIRANIU PATIENDB\n");
@@ -115,19 +115,21 @@ void addPatientX(){
 			fputs(buffer,fp);
 			printf("wpis\n");
 			fclose(fp);
-						printf("wpis\n");
 
-			incrementPatientCount();
+			//incrementPatientCount();
 			printPatients();
 			//loadPatient();
 			printPatients();
-		}
+		
 }
 
 
 
 void incrementPatientCount() {
+	printf("inc1\n");
 	int patientCount = getPatientCount();
+	printf("inc2\n");
+
 	patientCount++;
 	FILE *fp = fopen(patientDB,"r+");
 	fseek(fp,0,SEEK_SET);
@@ -148,6 +150,7 @@ int getPatientCount() {
     else {
         return 0;
     }
+    
 }
 void printPatients() {
 	int i;
