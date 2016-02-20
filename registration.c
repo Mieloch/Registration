@@ -44,19 +44,19 @@ int main(int argc, char** argv){
 			sendDoctorsInDate();
 		}
 	
-	
+		else if(msgrcv(msgid,&informationMessage,sizeof(informationMessage),6,IPC_NOWAIT) != -1){
+			sendVisitInfo();
+		}
 		else if(msgrcv(msgid,&informationMessage,sizeof(informationMessage),5,IPC_NOWAIT) != -1){
 			cancelVisit();
 		}
 			
 
-		else if(msgrcv(msgid,&informationMessage,sizeof(informationMessage),6,IPC_NOWAIT) != -1){
-			sendVisitInfo();
-		}
-	/*		else if(msgrcv(msgid,&informationMessage,sizeof(informationMessage),4,IPC_NOWAIT) != -1){
+
+		else if(msgrcv(msgid,&informationMessage,sizeof(informationMessage),4,IPC_NOWAIT) != -1){
 			addVisit();
 		}
-	*/			printf("3\n");
+			printf("3\n");
 
 
 
@@ -133,6 +133,8 @@ void cancelVisit(){
 		}
 		savePatient();
 		loadVisits();
+		printf("TYPE %d\n",informationMessage.type);
+		//printf("mtype %d\n",informationMessage.mtype);
 		informationMessage.mtype = informationMessage.type;
 		msgsnd(msgid,&informationMessage,sizeof(informationMessage),0);
 			printf("koniec cancelVisit\n");

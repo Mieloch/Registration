@@ -93,6 +93,7 @@ void editVisit(){
 	
 }
 void getVisitInfo(){
+	printf("start getvisitInfo\n");
 	strcpy(informationMessage.login, logedLogin);
 	informationMessage.type = pid;
 	informationMessage.mtype = 6;
@@ -106,7 +107,6 @@ void getVisitInfo(){
 	}
 }
 void cancelVisit(){
-	InformationMessage informationMessage;
 	strcpy(informationMessage.login, logedLogin);
 	informationMessage.type = pid;
 	informationMessage.mtype = 5;
