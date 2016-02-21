@@ -6,6 +6,7 @@
 void loginUser();
 void sendDoctorsInDate();
 void addVisit();
+void showVisitDay();
 int getDayOfWeek(int d, int m, int y);
 int checkFreeTerm(char* doctorLastName, int day, int month, int year, int term);
 void sendVisitInfo();
@@ -57,6 +58,10 @@ int main(int argc, char** argv){
 		else if(msgrcv(msgid,&informationMessage,sizeof(informationMessage),4,IPC_NOWAIT) != -1){
 			addVisit();
 		}
+		else if(msgrcv(msgid,&informationMessage,sizeof(informationMessage),7,IPC_NOWAIT) != -1){
+			showVisitDay();
+		}
+		
 		else if(msgrcv(msgid,&doctorMessage,sizeof(doctorMessage),10,IPC_NOWAIT) != -1){
 			giveVacation();
 		}
@@ -76,8 +81,8 @@ int checkVacation(int d, int m, int y, char* doctorLastName){
 		for(i=0;i<doctorCount;i++){
 			if(strcmp(doctor[i].lastName ,informationMessage.doctorLastName) == 0 &&
 			doctor[i].vacationDate.tm_mday == d &&
-			doctor[i].vacationDate.tm_mon == m &&
-			doctor[i].vacationDate.tm_year == y
+			doctor[i].vacationDate.tm_mon == (m-1) &&
+			doctor[i].vacationDate.tm_year == (y-1900)
 			){
 					
 					return 0; // ma urlop tego dnia
@@ -100,7 +105,8 @@ void giveVacation(){
 				int visitDay = patient[k].visitDate.tm_mday;
 				int visitMonth = patient[k].visitDate.tm_mon;
 				int visitYear =patient[k].visitDate.tm_year;
-				if(strcmp(patient[k].doctorLastName,doctor[i].lastName) == 0 && visitDay == doctorMessage.day && doctorMessage.month == visitMonth && doctorMessage.year == visitYear){
+				printf("ten tok lekarza %d\n", visitYear);
+				if(strcmp(patient[k].doctorLastName,doctor[i].lastName) == 0 && visitDay == doctorMessage.day && (doctorMessage.month-1) == visitMonth && (doctorMessage.year-1900) == visitYear){
 					printf("kasujemy wizyte\n");
 					strcpy(patient[k].doctorLastName, "\n");
 					strcpy(patient[k].doctorName, "\n");
@@ -138,6 +144,22 @@ void sendVisitInfo(){
 		msgsnd(msgid,&informationMessage,sizeof(informationMessage),0);
 			printf("end sendVisitInfo\n");
 
+}
+void showVisitDay(){
+	int i,k;
+	char buffer[100];
+	char result[100];
+	strcpy(result, "nie ma takiego lekarza\n");
+	for(i=0;i<doctorCount;i++){
+		if(strcmp(doctor[i].lastName ,informationMessage.doctorLastName) == 0){
+						strftime(buffer,100,"%A",&doctor[i].visitDay);
+						strcpy(result,"Lekarz przyjmuje w: ");
+						strcat(result,buffer);
+		}	
+	}
+	strcpy(informationMessage.information, result);
+	informationMessage.mtype = informationMessage.type;
+	msgsnd(msgid,&informationMessage,sizeof(informationMessage),0);
 }
 int checkFreeTerm(char* doctorLastName, int day, int month, int year, int term){
 
@@ -181,7 +203,6 @@ void cancelVisit(){
 		}
 		savePatient();
 		loadVisits();
-		printf("TYPE %d\n",informationMessage.type);
 		//printf("mtype %d\n",informationMessage.mtype);
 		informationMessage.mtype = informationMessage.type;
 		msgsnd(msgid,&informationMessage,sizeof(informationMessage),0);
@@ -264,6 +285,8 @@ void sendDoctorsInDate(){
 						if(doctorVisitDay != dayOfWeek){
 							continue;
 						}
+
+						
 		
 		
 						for(k=0;k<20;k++){	
@@ -274,7 +297,14 @@ void sendDoctorsInDate(){
 							}
 						}
 						if(isTaken == 0)	
+												
 								strcat(result,doctor[i].lastName);
+								if(doctor[i].vacationDate.tm_mday == informationMessage.day &&
+								doctor[i].vacationDate.tm_mon == (informationMessage.month-1) &&
+								doctor[i].vacationDate.tm_year == (informationMessage.year-1900)){
+									strcat(result, "lekarz ma urlop tego dnia!\n");
+									
+								}
 					}
 		}
 		if(strlen(result) == 0){

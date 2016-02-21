@@ -7,6 +7,7 @@ void getDoctorInDate();
 void chooseDoctor();
 void editVisit();
 void getVisitInfo();
+void showVisitDay();
 void cancelVisit();
 AddPatientMessage addPatientMessage;
 LoginMessage loginMessage;
@@ -123,7 +124,8 @@ void setVisit(){
 		
 	do{
 		printf("\n#1. Wyswietl lekarzy przyjmujacych danego dnia\n"); 
-		printf("#2. Umów wizyte do lekarza na wybrana date\n"); 
+		printf("#2. Wyswietl dzien przyjec danego lekarza\n"); 
+		printf("#3. Umów wizyte do lekarza na wybrana date\n"); 
 		if(day != -1 && month && -1 && year != -1){
 			printf("Wybrana data: %d-%d-%d\n", day,month,year);
 		}
@@ -135,6 +137,10 @@ void setVisit(){
 				break;
 			}
 			case '2' : {
+				showVisitDay();
+				break;
+			}
+			case '3' : {
 				chooseDoctor();
 				break;
 			}
@@ -142,6 +148,19 @@ void setVisit(){
 		
 		
 	}while(choose != 'q');
+}
+void showVisitDay(){
+	printf("start showVisitDay\n");
+	getFromUser("Podaj nazwisko lekarza: \n");
+	strcpy(informationMessage.doctorLastName, buffer);
+	
+	informationMessage.type = pid;
+	informationMessage.mtype = 7;
+	msgsnd(msgId, &informationMessage, sizeof(informationMessage),0);
+	msgrcv(msgId, &informationMessage, sizeof(informationMessage),pid,0);
+	
+	printf("\n %s\n", informationMessage.information);
+	
 }
 void chooseDoctor(){
 	if(day == -1 || month  == -1 || year == -1){

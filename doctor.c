@@ -50,10 +50,8 @@ void loadVisits(){
 		k=0;
 		for(j=0;j<patientCount;j++){
 			if(!strcmp(patient[j].doctorLastName,doctor[i].lastName)){
-				printf("przypis\n");
 				doctor[i].visits[k] = patient[j].visitDate;
 				k++;
-				printf("przypis\n");
 			}
 		}
 	}
@@ -62,7 +60,6 @@ void loadVisits(){
 
 void saveDoctors(){
 	int doctorCount = getDoctorCount();
-	printf("doctorCount :%d\n",doctorCount);
 	int i;
 	FILE *fp = fopen(doctorDB, "w");
 	char intStr[10];

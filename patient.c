@@ -5,7 +5,6 @@ char* patientDB = "patientDB";
 struct Patient patient[100];
 int patientCount;
 void savePatient() {
-		printf("a1\n");
 	int patientCount = getPatientCount();
 	int i;
 	FILE *fp = fopen(patientDB, "w");
@@ -14,7 +13,6 @@ void savePatient() {
 	sprintf(intStr,"%d", patientCount);
 	fputs(intStr,fp);
 	fputs("\n",fp);
-		printf("a2\n");
 	for(i=0;i<patientCount;i++){
 		fputs(patient[i].name,fp);
 		fputs(patient[i].lastName,fp);
@@ -36,9 +34,7 @@ void savePatient() {
 		fputs("\n",fp);
 		sprintf(intStr,"%d", patient[i].confirmation);
 		fputs(intStr,fp);
-			printf("a3\n");
 		fputs("\n",fp);
-			printf("a4\n");
 	}
 	fclose(fp);
 }
