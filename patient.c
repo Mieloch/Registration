@@ -137,10 +137,10 @@ void incrementPatientCount() {
 }
 int getPatientCount() {
     FILE *fp = fopen(patientDB, "r");
-    char *buffer;
+    char *buffer = malloc(sizeof(int));
     if (fp != NULL) {
         fgets(buffer, sizeof(int), fp);
-        patientCount = atof(buffer);
+        patientCount = atoi(buffer);
         fclose(fp);
         return patientCount;
     }

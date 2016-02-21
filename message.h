@@ -37,4 +37,17 @@ typedef struct InformationMessage
 }InformationMessage;
 InformationMessage informationMessage;
 
+typedef struct DoctorMessage
+{
+	long mtype;
+	int type;
+    int day;
+    int month;
+    int year;
+    int duration;
+    char doctorLastName[100];
+    char information[1000];
+
+}DoctorMessage;
+DoctorMessage doctorMessage;
 int msgid;

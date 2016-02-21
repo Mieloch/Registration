@@ -28,7 +28,7 @@ void loadDoctors(){
 				strcpy(doctor[i].lastName,buffer);
 				
 				fgets(buffer,sizeof(buffer),fp); // wczytaj date urlopu
-				strptime(buffer,"%d %b %Y",&doctor[i].vacationDate);
+				strptime(buffer,"%c",&doctor[i].vacationDate);
 				
 				fgets(buffer,sizeof(buffer),fp); // wczytaj dlugosc urlopu
 				doctor[i].vacationDuration = atoi(buffer);
@@ -62,6 +62,7 @@ void loadVisits(){
 
 void saveDoctors(){
 	int doctorCount = getDoctorCount();
+	printf("doctorCount :%d\n",doctorCount);
 	int i;
 	FILE *fp = fopen(doctorDB, "w");
 	char intStr[10];
@@ -73,7 +74,7 @@ void saveDoctors(){
 		fputs(doctor[i].name,fp); // imie
 		fputs(doctor[i].lastName,fp); // nazwisko
 		
-		strftime(buffer,100,"%d %b %Y",&doctor[i].vacationDate); // data urlopu
+		strftime(buffer,100,"%c",&doctor[i].vacationDate); // data urlopu
 		fputs(buffer,fp);
 		fputs("\n",fp);
 		
@@ -85,6 +86,7 @@ void saveDoctors(){
 		fputs(buffer,fp);
 		fputs("\n",fp);		
 	}
+	fclose(fp);
 }
 
 void printDoctors(){

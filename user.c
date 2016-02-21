@@ -122,8 +122,8 @@ void setVisit(){
 	char choose;
 		
 	do{
-		printf("\n#1. Sprawdz jacy lekarze przyjmuja w konkretny dzien\n"); 
-		printf("#2. Umów wizyte do lekarza na wybrana date date\n"); 
+		printf("\n#1. Wyswietl lekarzy przyjmujacych danego dnia\n"); 
+		printf("#2. Umów wizyte do lekarza na wybrana date\n"); 
 		if(day != -1 && month && -1 && year != -1){
 			printf("Wybrana data: %d-%d-%d\n", day,month,year);
 		}
@@ -178,9 +178,7 @@ void getDoctorInDate(){
 	
 	informationMessage.type = pid;
 	informationMessage.mtype = 3;
-	printf("send\n");
 	msgsnd(msgId, &informationMessage, sizeof(informationMessage),0);
-		printf("send2\n");
 	msgrcv(msgId, &informationMessage, sizeof(informationMessage),pid,0);
 	printf("\nLekarze przyjmujacy tego dnia:\n %s\n", informationMessage.information);
 
